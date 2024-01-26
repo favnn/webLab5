@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        #autocomplete-list {
+            max-height: 100px;
+            overflow-y: auto;
+            border: 1px solid #ccc;
+            position: absolute;
+        }
+
+        #autocomplete-list div {
+            padding: 10px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <input type="text" id="autocomplete-input" oninput="showAutocomplete()">
+    <div id="autocomplete-list"></div>
+
+    <script>
+        const autocompleteData = ["привет", "как", "дела", "чем", "занят", "пока"];
+
+        function showAutocomplete() {
+            const input = document.getElementById("autocomplete-input");
+            const autocompleteList = document.getElementById("autocomplete-list");
+            const inputValue = input.value.toLowerCase();
+
+            autocompleteList.innerHTML = '';
+
+            const filteredSuggestions = autocompleteData.filter(suggestion =>
+                suggestion.toLowerCase().includes(inputValue)
+            );
+
+            filteredSuggestions.forEach(suggestion => {
+                const suggestionDiv = document.createElement("div");
+                suggestionDiv.textContent = suggestion;
+                suggestionDiv.onclick = () => {
+                    input.value = suggestion;
+                    autocompleteList.innerHTML = '';
+                };
+                autocompleteList.appendChild(suggestionDiv);
+            });
+        }
+
+        document.addEventListener("click", function (e) {
+            const autocompleteList = document.getElementById("autocomplete-list");
+            const input = document.getElementById("autocomplete-input");
+
+            if (e.target !== input && e.target !== autocompleteList) {
+                autocompleteList.innerHTML = '';
+            }
+        });
+    </script>
+</body>
+</html>

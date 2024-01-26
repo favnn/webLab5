@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        canvas {
+            border: 2px solid #fff;
+        }
+    </style>
+    <title>Космический шутер</title>
+</head>
+<body>
+    <canvas id="gameCanvas" width="800" height="600"></canvas>
+    <script>
+        const canvas = document.getElementById("gameCanvas");
+        const ctx = canvas.getContext("2d");
+
+        const player = {
+            x: canvas.width / 2,
+            y: canvas.height - 30,
+            width: 50,
+            height: 50,
+            speed: 5
+        };
+
+        const enemies = [];
+        const medals = [];
+
+        let level = 1;
+
+        function drawPlayer() {
+            ctx.fillStyle = "#00ff00";
+            ctx.fillRect(player.x, player.y, player.width, player.height);
+        }
+
+        function drawEnemy(x, y) {
+            ctx.fillStyle = "#ff0000";
+            ctx.fillRect(x, y, 30, 30);
+        }
+
+        function drawMedal(x, y) {
+            ctx.fillStyle = "#ffff00";
+            ctx.fillRect(x, y, 20, 20);
+        }
+
+        function drawLevel() {
+            ctx.fillStyle = "#fff";
+            ctx.font = "24px Arial";
+            ctx.fillText("Уровень: " + level, 10, 30);
+        }
+
+        function collisionDetection(object1, object2) {
+            return (
+                object1.x < object2.x + object2.width &&
+                object1.x + object1.width > object2.x &&
+                object1.y < object2.y + object2.height &&
+                object1.y + object1.height > object2.y
+            );
+        }
+
+        function update() {
+            if (player.x < 0) player.x = 0;
+            if (player.x + player.width > canvas.width) player.x = canvas.width - player.width;
+
+            if (enemies.length === 0) {
+                for (let i = 0; i < level * 2; i++) {
+                    const enemyX = Math.random() * (canvas.width - 30);
+                    const enemyY = Math.random() * (canvas.height / 2);
+                    enemies.push({ x: enemyX, y: enemyY });
+                }
+
+                const medalX = Math.random() * (canvas.width - 20);
+                const medalY = Math.random() * (canvas.height / 2);
+                medals.push({ x: medalX, y: medalY });
+            }
+
+            enemies.forEach((enemy, index) => {
+                enemy.y += level;
+                drawEnemy(enemy.x, enemy.y);
+
+                if (collisionDetection(player, enemy)) {
+                    alert("Игра окончена! Ваш уровень: " + level);
+                    document.location.reload();
+                }
+
+                if (enemy.y > canvas.height) {
+                    enemies.splice(index, 1);
+                    level++;
+                }
+            });
+
+            medals.forEach((medal, index) => {
+                medal.y += level;
+                drawMedal(medal.x, medal.y);
+
+                if (collisionDetection(player, medal)) {
+                    medals.splice(index, 1);
+                    level++;
+                }
+
+                if (medal.y > canvas.height) {
+                    medals.splice(index, 1);
+                }
+            });
+
+            drawPlayer();
+            drawLevel();
+        }
+
+        function keyDownHandler(e) {
+            if (e.key === "Right" || e.key === "ArrowRight") {
+                player.x += player.speed;
+            } else if (e.key === "Left" || e.key === "ArrowLeft") {
+                player.x -= player.speed;
+            }
+        }
+
+        document.addEventListener("keydown", keyDownHandler);
+
+        function gameLoop() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            update();
+            requestAnimationFrame(gameLoop);
+        }
+
+        gameLoop();
+    </script>
+</body>
+</html>

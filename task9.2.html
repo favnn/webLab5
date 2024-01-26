@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        #draggable {
+            width: 150px;
+            height: 150px;
+            background-color: #3498db;
+            color: #fff;
+            text-align: center;
+            line-height: 150px;
+            cursor: grab;
+            user-select: none;
+            position: absolute;
+        }
+    </style>
+</head>
+<body>
+    <div id="draggable" draggable="true">Подвинь меня</div>
+
+    <script>
+        const draggableElement = document.getElementById("draggable");
+        let offsetX, offsetY;
+
+        draggableElement.addEventListener("dragstart", function (e) {
+            offsetX = e.clientX - draggableElement.getBoundingClientRect().left;
+            offsetY = e.clientY - draggableElement.getBoundingClientRect().top;
+        });
+
+        document.addEventListener("dragover", function (e) {
+            e.preventDefault();
+        });
+
+        document.addEventListener("drop", function (e) {
+            e.preventDefault();
+
+            const x = e.clientX - offsetX;
+            const y = e.clientY - offsetY;
+
+            draggableElement.style.left = x + "px";
+            draggableElement.style.top = y + "px";
+        });
+    </script>
+</body>
+</html>

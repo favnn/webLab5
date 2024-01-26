@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+        }
+
+        #mouse-trail {
+            position: absolute;
+            pointer-events: none;
+        }
+
+        .trail-dot {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            background-color: #db3498;
+            border-radius: 100%;
+            transform-origin: center;
+            transition: transform 2s ease-out;
+        }
+    </style>
+</head>
+<body>
+    <div id="mouse-trail"></div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const mouseTrail = document.getElementById("mouse-trail");
+
+            document.addEventListener("mousemove", function(e) {
+                const dot = document.createElement("div");
+                dot.className = "trail-dot";
+
+                const mouseX = e.clientX;
+                const mouseY = e.clientY;
+
+                dot.style.left = mouseX + "px";
+                dot.style.top = mouseY + "px";
+
+                mouseTrail.appendChild(dot);
+
+                setTimeout(() => {
+                    dot.style.transform = "scale(0)";
+                }, 10);
+
+                setTimeout(() => {
+                    mouseTrail.removeChild(dot);
+                }, 500);
+            });
+        });
+    </script>
+</body>
+</html>

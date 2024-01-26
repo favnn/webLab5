@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Управление текстовым полем</title>
+    <script>
+        window.onload = function () {
+            const textField = document.getElementById('textField');
+            const statusButton = document.getElementById('statusButton');
+            const visibilityButton = document.getElementById('visibilityButton');
+            const toggleFieldButton = document.getElementById('toggleFieldButton');
+
+            document.getElementById('submitButton').addEventListener('click', function () {
+                const inputValue = textField.value.trim();
+                if (inputValue !== '') {
+                    alert(`Вы ввели "${inputValue}"`);
+                } else {
+                    alert('Вы ничего не ввели');
+                }
+            });
+
+            statusButton.addEventListener('click', function () {
+                textField.disabled = !textField.disabled;
+                statusButton.innerText = textField.disabled ? 'Заблокировано' : 'Разблокированo';
+            });
+
+            visibilityButton.addEventListener('click', function () {
+                textField.type = textField.type === 'password' ? 'text' : 'password';
+                visibilityButton.innerText = textField.type === 'password' ? 'Скрыто' : 'Доступно';
+            });
+
+            toggleFieldButton.addEventListener('click', function () {
+                textField.style.display = textField.style.display === 'none' ? 'block' : 'none';
+                toggleFieldButton.innerText = textField.style.display === 'none' ? 'Показать поле' : 'Скрыть поле';
+            });
+        };
+    </script>
+</head>
+<body>
+    <input type="text" id="textField" placeholder="Введите текст"><br>
+    <button id="submitButton">Проверить ввод</button><br>
+    <button id="statusButton">Разблокировано</button><br>
+    <button id="visibilityButton">Доступно</button><br>
+    <button id="toggleFieldButton">Скрыть поле</button>
+</body>
+</html>
